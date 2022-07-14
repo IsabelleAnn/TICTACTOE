@@ -1,0 +1,163 @@
+:root {
+    --box-border: var(--box-border-color) solid 0.4vw;
+    --box-border-color: rgba(0, 255, 13, 0.507);
+    --header-and-btns-font-size: 4vw;
+    --myfont: 'Permanent Marker', cursive;
+    --grid-box-shadow: 8px 8px 3px rgba(0, 0, 0, 0.123);
+    --tilt: rotate(-10deg);
+    --opacity: 0.473;
+    --footer-color: rgba(0, 0, 0, 0.26);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: var(--myfont);
+    background-color: #fff;
+    background-image: linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
+}
+
+#header {
+    padding: 2%;
+    top: 6%;
+    left: 7%;
+    position: absolute;
+    transform: var(--tilt);
+    align-self: flex-start;
+}
+
+#header h1 {
+    font-size: var(--header-and-btns-font-size);
+    font-weight: bold;
+    font-family: 'Permanent Marker', cursive;
+    color: rgba(255, 0, 149, 0.493);
+}
+
+#header h1:hover {
+    color: rgb(255, 0, 149);
+}
+
+#play-btn button {
+    margin: 4%;
+    right: 15%;
+    bottom: 10%;
+    position: absolute;
+    transform: var(--tilt);
+    align-self: flex-start;
+    width: 10vw;
+    height: 5vw;
+    font-size: var(--header-and-btns-font-size);
+    border: none;
+    cursor: pointer;
+    font-family: var(--myfont);
+    background-color: transparent;
+    color: rgba(195, 0, 255, 0.486);
+}
+
+#play-btn button:hover {
+    color: rgb(195, 0, 255);
+}
+
+#grid-container {
+    transform: var(--tilt);
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    height: 30vw;
+    width: 30vw;
+}
+
+.grid-boxes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5vw;
+    color: rgba(0, 174, 255, 0.486);
+}
+
+.grid-boxes:hover {
+    color: rgb(0, 174, 255);
+}
+
+#box-1 {
+    border-right: var(--box-border);
+    border-bottom: var(--box-border);
+}
+
+#box-2 {
+    border-left: var(--box-border);
+    border-right: var(--box-border);
+    border-bottom: var(--box-border);
+}
+
+#box-3 {
+    border-left: var(--box-border);
+    border-bottom: var(--box-border);
+}
+
+#box-4 {
+    border-top: var(--box-border);
+    border-right: var(--box-border);
+    border-bottom: var(--box-border);
+}
+
+#box-5 {
+    border: var(--box-border);
+}
+
+#box-6 {
+    border-left: var(--box-border);
+    border-top: var(--box-border);
+    border-bottom: var(--box-border);
+}
+
+#box-7 {
+    border-top: var(--box-border);
+    border-right: var(--box-border);
+}
+
+#box-8 {
+    border-left: var(--box-border);
+    border-top: var(--box-border);
+    border-right: var(--box-border);
+}
+
+#box-9 {
+    border-left: var(--box-border);
+    border-top: var(--box-border);
+}
+
+#footer {
+    color: var(--footer-color);
+    font-size: 1.5vw;
+    align-self: flex-start;
+    bottom: 2vw;
+    position: absolute;
+    margin-left: 6%;
+}
+
+#footer a {
+    color: var(--footer-color);
+    text-decoration: none;
+}
+
+#footer a:visited {
+    color: var(--footer-color);
+}
+
+#footer a:active {
+    color: var(--footer-color);
+}
+
+#footer a:hover {
+    color: rgb(97, 97, 97);
+}
