@@ -47,25 +47,81 @@ body {
     color: rgb(255, 0, 149);
 }
 
-#play-btn button {
+#play-btn {
     margin: 4%;
     right: 15%;
     bottom: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#player-selection {
+    margin: 4%;
+    right: 5%;
+    bottom: 13%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#PVP-btn,
+#AI-btn {
+    font-size: 2vw;
+    color: rgba(195, 0, 255, 0.486);
+    border: none;
+    font-family: var(--myfont);
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+    /* width: 70px; */
+}
+
+#PVP-section,
+#AI-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.checkmark {
+    font-size: 2.5vw;
+}
+
+.checkmark-container {
+    border: solid var(--footer-color) 4px;
+    border-radius: 5px;
+    height: 1.7vw;
+    width: 1.7vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+#player-selection,
+#play-btn {
     position: absolute;
     transform: var(--tilt);
     align-self: flex-start;
-    width: 10vw;
-    height: 5vw;
+    /* width: 10vw;
+    height: 5vw; */
     font-size: var(--header-and-btns-font-size);
     border: none;
-    cursor: pointer;
     font-family: var(--myfont);
     background-color: transparent;
     color: rgba(195, 0, 255, 0.486);
 }
 
-#play-btn button:hover {
+#play-section p:hover {
     color: rgb(195, 0, 255);
+}
+
+#play-section {
+    display: block;
 }
 
 #grid-container {
