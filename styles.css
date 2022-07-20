@@ -1,12 +1,21 @@
 :root {
-    --box-border: var(--box-border-color) solid 0.4vw;
-    --box-border-color: rgba(0, 255, 13, 0.507);
     --header-and-btns-font-size: 4vw;
     --myfont: 'Permanent Marker', cursive;
     --grid-box-shadow: 8px 8px 3px rgba(0, 0, 0, 0.123);
     --tilt: rotate(-10deg);
     --opacity: 0.473;
+    --header-color: rgba(255, 0, 149, 0.493);
+    --header-color-hover: rgb(255, 0, 149);
+    --box-border: var(--box-border-color) solid 0.4vw;
+    --box-border-color: rgba(0, 255, 13, 0.507);
+    --player-color: rgba(0, 174, 255, 0.486);
+    --player-color-hover: rgb(0, 174, 255);
+    --play-color: rgba(195, 0, 255, 0.486);
+    --play-color-hover: rgb(195, 0, 255);
     --footer-color: rgba(0, 0, 0, 0.26);
+    --footer-color-hover: rgb(97, 97, 97);
+    /* --footer-color: rgba(238, 255, 0, 0.404);
+    --footer-color-hover: rgb(238, 255, 0); */
 }
 
 * {
@@ -40,88 +49,107 @@ body {
     font-size: var(--header-and-btns-font-size);
     font-weight: bold;
     font-family: 'Permanent Marker', cursive;
-    color: rgba(255, 0, 149, 0.493);
+    color: var(--header-color);
 }
 
 #header h1:hover {
-    color: rgb(255, 0, 149);
+    color: var(--header-color-hover);
+}
+
+#winner {
+    color: var(--play-color);
+    font-size: 3vw;
+}
+
+#box-1,
+#box-5,
+#box-9 {
+    color: var(--header-color);
+}
+
+#play-section {
+    position: absolute;
+    transform: var(--tilt);
+    font-size: var(--header-and-btns-font-size);
+    border: none;
+    font-family: var(--myfont);
+    background-color: transparent;
+    color: var(--play-color);
+    margin: 4%;
+    right: 3%;
+    bottom: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 #play-btn {
-    margin: 4%;
-    right: 15%;
-    bottom: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#player-selection {
-    margin: 4%;
-    right: 5%;
-    bottom: 13%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+#play-btn:hover {
+    color: var(--play-color-hover);
+    cursor: pointer;
 }
 
-#PVP-btn,
-#AI-btn {
-    font-size: 2vw;
-    color: rgba(195, 0, 255, 0.486);
-    border: none;
-    font-family: var(--myfont);
-    background-color: transparent;
+.arrow {
+    font-size: 4vw;
     cursor: pointer;
-    margin-right: 10px;
-    /* width: 70px; */
+    color: var(--header-color);
+    height: fit-content;
+}
+
+.arrow:hover {
+    color: var(--header-color-hover);
+}
+
+#player-selection {
+    font-size: 2.5vw;
+    display: flex;
+    justify-content: center;
 }
 
 #PVP-section,
 #AI-section {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.checkmark {
-    font-size: 2.5vw;
-}
-
-.checkmark-container {
-    border: solid var(--footer-color) 4px;
-    border-radius: 5px;
-    height: 1.7vw;
-    width: 1.7vw;
-    display: flex;
-    align-items: center;
+    padding: 1vw;
+    width: 13.5vw;
+    height: 17vw;
     justify-content: center;
 }
 
-.hidden {
-    visibility: hidden;
+.players {
+    display: flex;
+    flex-direction: column;
 }
 
-#player-selection,
-#play-btn {
-    position: absolute;
-    transform: var(--tilt);
-    align-self: flex-start;
-    /* width: 10vw;
-    height: 5vw; */
-    font-size: var(--header-and-btns-font-size);
-    border: none;
-    font-family: var(--myfont);
+label {
+    color: var(--player-color);
+}
+
+input {
+    width: 10vw;
     background-color: transparent;
-    color: rgba(195, 0, 255, 0.486);
+    border: var(--box-border);
+    color: var(--footer-color);
+    padding: 0.3vw;
+    font-family: var(--myfont);
 }
 
-#play-section p:hover {
-    color: rgb(195, 0, 255);
+input:focus {
+    outline: none;
 }
 
-#play-section {
-    display: block;
+.selected {
+    font-size: 3vw;
+    text-align: center;
+}
+
+.collapse {
+    visibility: collapse;
 }
 
 #grid-container {
@@ -137,57 +165,57 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 5vw;
-    color: rgba(0, 174, 255, 0.486);
+    color: var(--player-color);
 }
 
 .grid-boxes:hover {
-    color: rgb(0, 174, 255);
+    color: var(--player-color-hover);
+}
+
+#box-0 {
+    border-right: var(--box-border);
+    border-bottom: var(--box-border);
 }
 
 #box-1 {
+    border-left: var(--box-border);
     border-right: var(--box-border);
     border-bottom: var(--box-border);
 }
 
 #box-2 {
     border-left: var(--box-border);
-    border-right: var(--box-border);
     border-bottom: var(--box-border);
 }
 
 #box-3 {
-    border-left: var(--box-border);
-    border-bottom: var(--box-border);
-}
-
-#box-4 {
     border-top: var(--box-border);
     border-right: var(--box-border);
     border-bottom: var(--box-border);
 }
 
-#box-5 {
+#box-4 {
     border: var(--box-border);
 }
 
-#box-6 {
+#box-5 {
     border-left: var(--box-border);
     border-top: var(--box-border);
     border-bottom: var(--box-border);
 }
 
+#box-6 {
+    border-top: var(--box-border);
+    border-right: var(--box-border);
+}
+
 #box-7 {
+    border-left: var(--box-border);
     border-top: var(--box-border);
     border-right: var(--box-border);
 }
 
 #box-8 {
-    border-left: var(--box-border);
-    border-top: var(--box-border);
-    border-right: var(--box-border);
-}
-
-#box-9 {
     border-left: var(--box-border);
     border-top: var(--box-border);
 }
@@ -215,5 +243,5 @@ body {
 }
 
 #footer a:hover {
-    color: rgb(97, 97, 97);
+    color: var(--footer-color-hover);
 }

@@ -14,35 +14,37 @@
 <body>
     <div id="header">
         <h1>TIC TAC TOE</h1>
+        <h3 id="winner">You win!</h3>
     </div>
     <div id="grid-container">
-        <div class="grid-boxes" id="box-1">1</div>
-        <div class="grid-boxes" id="box-2">2</div>
-        <div class="grid-boxes" id="box-3">3</div>
-        <div class="grid-boxes" id="box-4">4</div>
-        <div class="grid-boxes" id="box-5">5</div>
-        <div class="grid-boxes" id="box-6">6</div>
-        <div class="grid-boxes" id="box-7">7</div>
-        <div class="grid-boxes" id="box-8">8</div>
-        <div class="grid-boxes" id="box-9">9</div>
+        <div class="grid-boxes" id="box-0"></div>
+        <div class="grid-boxes" id="box-1"></div>
+        <div class="grid-boxes" id="box-2"></div>
+        <div class="grid-boxes" id="box-3"></div>
+        <div class="grid-boxes" id="box-4"></div>
+        <div class="grid-boxes" id="box-5"></div>
+        <div class="grid-boxes" id="box-6"></div>
+        <div class="grid-boxes" id="box-7"></div>
+        <div class="grid-boxes" id="box-8"></div>
     </div>
     <div id="play-section">
         <p id="play-btn">Play</p>
         <div id="player-selection">
-            <div id="PVP-section">
-                <p class="selected" id="PVP-btn">PVP</p>
-                <div class="checkmark-container">
-                    <p class="checkmark">X</p>
-                </div>
+            <div class="arrow">&#x3c;</div>
+            <div id="PVP-section" class="">
+                <form class="players">
+                    <p class="selected">PVP</p>
+                    <label for="player1-name">Player 1:</label>
+                    <input type="text" name="name" id="player1-name">
+                    <label for="player1-name">Player 2:</label>
+                    <input type="text" name="name" id="player2-name">
+                </form>
             </div>
-            <div id="AI-section">
-                <p id="AI-btn">AI</p>
-                <div class="checkmark-container">
-                    <p class="checkmark hidden">X</p>
-                </div>
+            <div id="AI-section" class="collapse">
+                <p class="selected">AI</p>
             </div>
+            <div class="arrow">&#x3e;</div>
         </div>
-
     </div>
     <div id="footer">
         <p>Made by
