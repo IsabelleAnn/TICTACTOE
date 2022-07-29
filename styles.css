@@ -56,7 +56,7 @@ body {
     color: var(--header-color-hover);
 }
 
-#winner {
+#status {
     color: var(--play-color);
     font-size: 3vw;
 }
@@ -112,7 +112,7 @@ body {
     font-size: 0.5vw;
 }
 
-#player-selection {
+#play-type-selection {
     font-size: 2.5vw;
     display: flex;
     justify-content: center;
