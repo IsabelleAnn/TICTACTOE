@@ -3,7 +3,7 @@ const DisplayControl = (() => {
     const PVPSection = document.getElementById("PVP-section");
     const AISection = document.getElementById("AI-section");
     const arrows = document.querySelectorAll(".arrow");
-    const grid = document.querySelectorAll(".grid-boxes");
+    const grid = document.getElementById("grid-container");
     const inputNames = document.querySelectorAll(`[name="name"]`);
     const playTypeSelection = document.getElementById("play-type-selection");
     let gameTypeSelected = document.querySelector(".selected").textContent;
@@ -18,7 +18,6 @@ const DisplayControl = (() => {
     let enterNameMsg = "Enter name";
     document.getElementById("player1-name").value = "";
     document.getElementById("player2-name").value = "";
-    console.log();
 
     //ARROW EVENT Section: -----------------------------------------------------
     arrows.forEach(arrow => {
@@ -33,7 +32,7 @@ const DisplayControl = (() => {
             toggleClass(PVPSection, AISection, "collapse");
             if (!checkStringIsNotEmpty(input1) || !checkStringIsNotEmpty(input2)) {
                 activated = false;
-                togglePlayBtn(activated);
+                togglePlayBtn(false);
             }
         }
         //AI selected 
@@ -41,7 +40,7 @@ const DisplayControl = (() => {
             toggleClass(pvp, ai, "selected");
             toggleClass(AISection, PVPSection, "collapse");
             activated = true;
-            togglePlayBtn(activated);
+            togglePlayBtn(true);
 
         }
         gameTypeSelected = document.querySelector(".selected").textContent;
@@ -128,16 +127,20 @@ const DisplayControl = (() => {
 
     function toggleNewGame() {
         if (checkBtnIsPlay(playBtn.textContent)) {
+            GameBoard.activateBoard(grid);
+            GameBoard.getGameType(gameTypeSelected);
             status.textContent = player1.playerTurn;
             playBtn.textContent = "Replay";
             playTypeSelection.classList.add("hide");
-            GameBoard.activateBoard(grid);
-            GameBoard.getGameType(gameTypeSelected);
+
         } else {
+            GameBoard.clearBoard();
+            GameBoard.deactivateBoard(grid);
             status.textContent = "";
             playBtn.textContent = "Play";
             playTypeSelection.classList.remove("hide");
-            GameBoard.deactivateBoard(grid);
+
+
         }
     }
 
@@ -180,7 +183,7 @@ const Player = (name, symbol) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const PVPGamePlay = ((firstPlayer, secondPlayer, currentBoard) => {
-    console.log();
+
 
     return {};
 })();
@@ -190,8 +193,8 @@ const AIGamePlay = ((firstPlayer, aiPlayer) => {
 
 
 
-    const printGameType = () =>
-        console.log();
+
+
 
     return {};
 })();
@@ -203,13 +206,6 @@ const GameBoard = (() => {
     let count = 0;
     let prevPlayer;
     let gameType;
-
-    const printBoard = () => board.forEach((box, index) => {
-        document.getElementById(`box-${index}`).textContent = box;
-    });
-
-    printBoard(board);
-
 
     function playerMoveTracker(e) {
 
@@ -227,19 +223,74 @@ const GameBoard = (() => {
         }
 
         if (count >= 5) {
-            checkForWin();
+            checkForWin(prevPlayer);
         }
     }
 
     const activateBoard = (grid) => {
-        grid.forEach(box => {
-            box.addEventListener("click", playerMoveTracker, true);
-        });
-
+        grid.addEventListener("click", playerMoveTracker, true);
+        console.log("board activated!");
     }
 
-    function checkForWin(count) {
+    const deactivateBoard = (grid) => {
+        grid.removeEventListener("click", playerMoveTracker, true);
+        console.log("board deactivated");
+        count = 0;
+    }
 
+    function checkForWin(prevPlayer) {
+
+        for (let i = 0; i < board.length; i += 3) {
+            if (board[i] === prevPlayer.symbol) {
+                if (board[i + 1] === prevPlayer.symbol) {
+                    if (board[i + 2] === prevPlayer.symbol) {
+                        console.log("win row");
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        for (let i = 0; i <= 2; i++) {
+            if (board[i] === prevPlayer.symbol) {
+                if (board[i + 3] === prevPlayer.symbol) {
+                    if (board[i + 6] === prevPlayer.symbol) {
+                        console.log("win col");
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        for (let i = 0; i < board.length; i += 4) {
+            if (board[i] === prevPlayer.symbol) {
+                if (i === (board.length - 1)) {
+                    console.log("Win diag left to right");
+                }
+            } else {
+                break;
+            }
+        }
+
+        for (let i = 2; i <= 6; i += 2) {
+            if (board[i] === prevPlayer.symbol) {
+                if (i === 6) {
+                    console.log("Win diag right to left");
+                }
+            } else {
+                break;
+            }
+        }
     }
 
     const getPlayer = (player) => {
@@ -249,14 +300,14 @@ const GameBoard = (() => {
         gameType = game;
     }
 
-    const deactivateBoard = (grid) => {
-        grid.forEach(box => {
-            box.removeEventListener("click", playerMoveTracker, true);
+    const clearBoard = () => {
+        board.forEach((box, index) => {
+            board[index] = "";
+            box = "";
+            document.getElementById(`box-${index}`).textContent = box;
+
         });
-        console.log("board deactivated");
     }
 
-
-
-    return { activateBoard, deactivateBoard, printBoard, getPlayer, getGameType };
+    return { activateBoard, deactivateBoard, getPlayer, getGameType, clearBoard };
 })();
