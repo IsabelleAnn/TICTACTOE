@@ -56,15 +56,9 @@ body {
     color: var(--header-color-hover);
 }
 
-#status {
+#status-display {
     color: var(--play-color);
     font-size: 3vw;
-}
-
-#box-1,
-#box-5,
-#box-9 {
-    color: var(--header-color);
 }
 
 #play-section {

@@ -14,7 +14,7 @@ const DisplayControl = (() => {
     let player2;
     let input1 = "";
     let input2 = "";
-    let status = document.getElementById("status");
+    let statusDisplay = document.getElementById("status-display");
     let enterNameMsg = "Enter name";
     document.getElementById("player1-name").value = "";
     document.getElementById("player2-name").value = "";
@@ -107,10 +107,10 @@ const DisplayControl = (() => {
     }
 
     //Play Event Section: ---------------------------------------------------
-    playBtn.addEventListener("click", play);
+    playBtn.addEventListener("click", playBtnHandler);
 
 
-    function play() {
+    function playBtnHandler() {
         if (activated) {
             if (checkGameTypeIsPVP()) {
                 player1 = Player(input1, 'X');
@@ -129,18 +129,15 @@ const DisplayControl = (() => {
         if (checkBtnIsPlay(playBtn.textContent)) {
             GameBoard.activateBoard(grid);
             GameBoard.getGameType(gameTypeSelected);
-            status.textContent = player1.playerTurn;
+            statusDisplay.textContent = player1.playerTurn;
             playBtn.textContent = "Replay";
             playTypeSelection.classList.add("hide");
-
         } else {
             GameBoard.clearBoard();
             GameBoard.deactivateBoard(grid);
-            status.textContent = "";
+            statusDisplay.textContent = "";
             playBtn.textContent = "Play";
             playTypeSelection.classList.remove("hide");
-
-
         }
     }
 
@@ -154,19 +151,31 @@ const DisplayControl = (() => {
     }
 
     const displayWhosTurn = (counter) => {
+
         if (counter > 0) {
             if (counter % 2 === 0) {
-                status.textContent = player1.playerTurn;
-                GameBoard.getPlayer(player2);
+                statusDisplay.textContent = player1.playerTurn;
+                GameBoard.getCurrentPlayer(player2);
             } else {
-                status.textContent = player2.playerTurn;
-                GameBoard.getPlayer(player1);
+                statusDisplay.textContent = player2.playerTurn;
+                GameBoard.getCurrentPlayer(player1);
             }
+        } else if (counter === 0) {
+            GameBoard.getCurrentPlayer(player1);
         }
 
     }
 
-    return { displayWhosTurn };
+    const displayWinner = (winner) => {
+        if (winner === undefined) {
+            statusDisplay.textContent = "It's a tie!";
+        } else {
+            statusDisplay.textContent = winner.playerWin;
+        }
+        GameBoard.deactivateBoard(grid);
+    }
+
+    return { displayWhosTurn, displayWinner };
 })();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,100 +191,120 @@ const Player = (name, symbol) => {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const PVPGamePlay = ((firstPlayer, secondPlayer, currentBoard) => {
 
-
-    return {};
-})();
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const AIGamePlay = ((firstPlayer, aiPlayer) => {
-
-
-
-
-
-
-    return {};
-})();
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const GameBoard = (() => {
     let board = ["", "", "", "", "", "", "", "", ""];
     let targetIndex;
     let count = 0;
-    let prevPlayer;
+    let currentPlayer;
     let gameType;
+    let AIMove;
+    let gameOver = false;
 
     function playerMoveTracker(e) {
 
+
         targetIndex = e.target.id.split("-").pop();
+        // if (count === 0) {
+        //     DisplayControl.displayWhosTurn(0);
+        // }
 
         if (board[targetIndex] === "") {
-
             count++;
             DisplayControl.displayWhosTurn(count);
-
-
-            console.log("targetIndex", targetIndex, prevPlayer, gameType);
-            board[targetIndex] = prevPlayer.symbol;
-            document.getElementById(`box-${targetIndex}`).textContent = prevPlayer.symbol;
+            console.log(currentPlayer);
+            board[targetIndex] = currentPlayer.symbol;
+            document.getElementById(`box-${targetIndex}`).textContent = currentPlayer.symbol;
+            console.log(currentPlayer.name);
         }
 
         if (count >= 5) {
-            checkForWin(prevPlayer);
+            checkForWin(currentPlayer);
         }
+
+        if (gameType === "AI" && !gameOver) {
+            count++;
+            AIMove = getAIMove();
+            setTimeout(function() {
+                DisplayControl.displayWhosTurn(count);
+                board[AIMove] = currentPlayer.symbol;
+                document.getElementById(`box-${AIMove}`).textContent = currentPlayer.symbol;
+                console.log(currentPlayer.name);
+                if (count >= 5) {
+                    checkForWin(currentPlayer);
+                }
+            }, 400);
+        }
+
+
+    }
+
+
+    function getAIMove() {
+        let availableSpotsArr = [];
+        let randomNum;
+
+        for (let i = 0; i < board.length; i++) {
+            if (board[i] === "") {
+                availableSpotsArr.push(i);
+            }
+        }
+        randomNum = Math.floor(Math.random() * (availableSpotsArr.length));
+        return availableSpotsArr[randomNum];
     }
 
     const activateBoard = (grid) => {
+        gameOver = false;
         grid.addEventListener("click", playerMoveTracker, true);
         console.log("board activated!");
     }
 
     const deactivateBoard = (grid) => {
+        gameOver = true;
         grid.removeEventListener("click", playerMoveTracker, true);
         console.log("board deactivated");
         count = 0;
+
     }
 
-    function checkForWin(prevPlayer) {
+    function checkForWin(currentPlayer) {
 
         for (let i = 0; i < board.length; i += 3) {
-            if (board[i] === prevPlayer.symbol) {
-                if (board[i + 1] === prevPlayer.symbol) {
-                    if (board[i + 2] === prevPlayer.symbol) {
+            console.log(i);
+            if (board[i] === currentPlayer.symbol) {
+                if (board[i + 1] === currentPlayer.symbol) {
+                    if (board[i + 2] === currentPlayer.symbol) {
                         console.log("win row");
-                    } else {
-                        break;
+
+                        DisplayControl.displayWinner(currentPlayer);
+                        gameOver = true;
                     }
-                } else {
-                    break;
                 }
-            } else {
-                break;
             }
         }
 
         for (let i = 0; i <= 2; i++) {
-            if (board[i] === prevPlayer.symbol) {
-                if (board[i + 3] === prevPlayer.symbol) {
-                    if (board[i + 6] === prevPlayer.symbol) {
+            console.log(i);
+            if (board[i] === currentPlayer.symbol) {
+                if (board[i + 3] === currentPlayer.symbol) {
+                    if (board[i + 6] === currentPlayer.symbol) {
                         console.log("win col");
-                    } else {
-                        break;
+
+                        DisplayControl.displayWinner(currentPlayer);
+                        gameOver = true;
                     }
-                } else {
-                    break;
                 }
-            } else {
-                break;
             }
         }
 
         for (let i = 0; i < board.length; i += 4) {
-            if (board[i] === prevPlayer.symbol) {
+            console.log(i);
+            if (board[i] === currentPlayer.symbol) {
                 if (i === (board.length - 1)) {
                     console.log("Win diag left to right");
+
+                    DisplayControl.displayWinner(currentPlayer);
+                    gameOver = true;
                 }
             } else {
                 break;
@@ -283,19 +312,30 @@ const GameBoard = (() => {
         }
 
         for (let i = 2; i <= 6; i += 2) {
-            if (board[i] === prevPlayer.symbol) {
+            console.log(i);
+            if (board[i] === currentPlayer.symbol) {
                 if (i === 6) {
                     console.log("Win diag right to left");
+
+                    DisplayControl.displayWinner(currentPlayer);
+                    gameOver = true;
                 }
             } else {
                 break;
             }
         }
+
+        if (count === 9) {
+
+            DisplayControl.displayWinner(undefined);
+            gameOver = true;
+        }
     }
 
-    const getPlayer = (player) => {
-        prevPlayer = player;
+    const getCurrentPlayer = (player) => {
+        currentPlayer = player;
     }
+
     const getGameType = (game) => {
         gameType = game;
     }
@@ -305,9 +345,9 @@ const GameBoard = (() => {
             board[index] = "";
             box = "";
             document.getElementById(`box-${index}`).textContent = box;
-
+            gameOver = false;
         });
     }
 
-    return { activateBoard, deactivateBoard, getPlayer, getGameType, clearBoard };
+    return { activateBoard, deactivateBoard, getCurrentPlayer, getGameType, clearBoard };
 })();
