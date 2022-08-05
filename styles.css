@@ -59,6 +59,7 @@ body {
 #status-display {
     color: var(--play-color);
     font-size: 3vw;
+    height: 90px;
 }
 
 #play-section {
@@ -100,8 +101,8 @@ body {
     color: var(--header-color-hover);
 }
 
-#player1-alert,
-#player2-alert {
+#playerX-alert,
+#playerO-alert {
     color: var(--header-color);
     font-size: 0.5vw;
 }

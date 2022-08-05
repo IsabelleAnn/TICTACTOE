@@ -3,21 +3,24 @@ const DisplayControl = (() => {
     const PVPSection = document.getElementById("PVP-section");
     const AISection = document.getElementById("AI-section");
     const arrows = document.querySelectorAll(".arrow");
-    const grid = document.getElementById("grid-container");
+    const grid = document.querySelectorAll(".grid-boxes");
     const inputNames = document.querySelectorAll(`[name="name"]`);
     const playTypeSelection = document.getElementById("play-type-selection");
     let gameTypeSelected = document.querySelector(".selected").textContent;
     const pvp = document.querySelector("#PVP");
     const ai = document.querySelector("#AI");
+    const winColor = "rgba(255, 0, 149, 0.493)";
+    const defaultColor = "rgba(0, 174, 255, 0.486)";
     let activated = false;
-    let player1;
-    let player2;
+    let playerX;
+    let playerO;
     let input1 = "";
     let input2 = "";
     let statusDisplay = document.getElementById("status-display");
     let enterNameMsg = "Enter name";
-    document.getElementById("player1-name").value = "";
-    document.getElementById("player2-name").value = "";
+
+    document.getElementById("playerX-name").value = "";
+    document.getElementById("playerO-name").value = "";
 
     //ARROW EVENT Section: -----------------------------------------------------
     arrows.forEach(arrow => {
@@ -82,23 +85,23 @@ const DisplayControl = (() => {
     });
 
     function validateInput() {
-        input1 = document.getElementById("player1-name").value;
-        input2 = document.getElementById("player2-name").value;
+        input1 = document.getElementById("playerX-name").value;
+        input2 = document.getElementById("playerO-name").value;
         console.log(input1, input2);
 
         if (!checkStringIsNotEmpty(input1)) {
             togglePlayBtn(false);
             activated = false;
-            document.getElementById("player1-alert").textContent = enterNameMsg;
+            document.getElementById("playerX-alert").textContent = enterNameMsg;
         } else {
-            document.getElementById("player1-alert").textContent = "";
+            document.getElementById("playerX-alert").textContent = "";
         }
         if (!checkStringIsNotEmpty(input2)) {
             togglePlayBtn(false);
             activated = false;
-            document.getElementById("player2-alert").textContent = enterNameMsg;
+            document.getElementById("playerO-alert").textContent = enterNameMsg;
         } else {
-            document.getElementById("player2-alert").textContent = "";
+            document.getElementById("playerO-alert").textContent = "";
         }
         if (checkStringIsNotEmpty(input1) && checkStringIsNotEmpty(input2)) {
             togglePlayBtn(true);
@@ -113,12 +116,12 @@ const DisplayControl = (() => {
     function playBtnHandler() {
         if (activated) {
             if (checkGameTypeIsPVP()) {
-                player1 = Player(input1, 'X');
-                player2 = Player(input2, 'O');
+                playerX = Player(input1, 'X');
+                playerO = Player(input2, 'O');
 
             } else {
-                player1 = Player("You", 'X');
-                player2 = Player('AI', 'O');
+                playerX = Player("You", 'X');
+                playerO = Player('AI', 'O');
             }
             toggleNewGame();
         }
@@ -127,9 +130,13 @@ const DisplayControl = (() => {
 
     function toggleNewGame() {
         if (checkBtnIsPlay(playBtn.textContent)) {
+            grid.forEach(box => {
+                box.style.color = defaultColor;
+            });
+
             GameBoard.activateBoard(grid);
             GameBoard.getGameType(gameTypeSelected);
-            statusDisplay.textContent = player1.playerTurn;
+            statusDisplay.textContent = playerX.playerTurn;
             playBtn.textContent = "Replay";
             playTypeSelection.classList.add("hide");
         } else {
@@ -154,14 +161,14 @@ const DisplayControl = (() => {
 
         if (counter > 0) {
             if (counter % 2 === 0) {
-                statusDisplay.textContent = player1.playerTurn;
-                GameBoard.getCurrentPlayer(player2);
+                statusDisplay.textContent = playerX.playerTurn;
+                GameBoard.getCurrentPlayer(playerO);
             } else {
-                statusDisplay.textContent = player2.playerTurn;
-                GameBoard.getCurrentPlayer(player1);
+                statusDisplay.textContent = playerO.playerTurn;
+                GameBoard.getCurrentPlayer(playerX);
             }
         } else if (counter === 0) {
-            GameBoard.getCurrentPlayer(player1);
+            GameBoard.getCurrentPlayer(playerX);
         }
 
     }
@@ -175,7 +182,14 @@ const DisplayControl = (() => {
         GameBoard.deactivateBoard(grid);
     }
 
-    return { displayWhosTurn, displayWinner };
+    const highlightWin = (a, b, c) => {
+        document.getElementById(`box-${a}`).style.color = winColor;
+        document.getElementById(`box-${b}`).style.color = winColor;
+        document.getElementById(`box-${c}`).style.color = winColor;
+
+    }
+
+    return { displayWhosTurn, displayWinner, highlightWin };
 })();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -201,14 +215,37 @@ const GameBoard = (() => {
     let AIMove;
     let gameOver = false;
 
-    function playerMoveTracker(e) {
+    function playGame(e) {
+        if (gameType === "AI") {
+            document.querySelectorAll(".grid-boxes").forEach(box => {
+                box.removeEventListener("click", playGame, true);
+            });
+        }
 
+        makePlayerMove(e);
 
+        if (count >= 5) {
+            checkForWin(currentPlayer);
+        }
+
+        if (gameType === "AI" && !gameOver) {
+            makeAIMove();
+            setTimeout(function() {
+                document.querySelectorAll(".grid-boxes").forEach(box => {
+                    if (box.textContent === "") {
+                        console.log("box text", box.textContent, box);
+                        box.addEventListener("click", playGame, true);
+                    }
+                });
+            }, 500);
+        }
+    }
+
+    function makePlayerMove(e) {
         targetIndex = e.target.id.split("-").pop();
-        // if (count === 0) {
-        //     DisplayControl.displayWhosTurn(0);
-        // }
 
+        e.target.removeEventListener("click", playGame, true);
+        console.log(board[targetIndex]);
         if (board[targetIndex] === "") {
             count++;
             DisplayControl.displayWhosTurn(count);
@@ -217,30 +254,28 @@ const GameBoard = (() => {
             document.getElementById(`box-${targetIndex}`).textContent = currentPlayer.symbol;
             console.log(currentPlayer.name);
         }
+    }
 
-        if (count >= 5) {
-            checkForWin(currentPlayer);
-        }
+    function makeAIMove() {
+        count++;
+        AIMove = getRandomAIMove();
+        document.getElementById(`box-${AIMove}`).removeEventListener("click", playGame, true);
 
-        if (gameType === "AI" && !gameOver) {
-            count++;
-            AIMove = getAIMove();
-            setTimeout(function() {
-                DisplayControl.displayWhosTurn(count);
-                board[AIMove] = currentPlayer.symbol;
-                document.getElementById(`box-${AIMove}`).textContent = currentPlayer.symbol;
-                console.log(currentPlayer.name);
-                if (count >= 5) {
-                    checkForWin(currentPlayer);
-                }
-            }, 400);
-        }
+        setTimeout(function() {
 
+            DisplayControl.displayWhosTurn(count);
+            board[AIMove] = currentPlayer.symbol;
+            document.getElementById(`box-${AIMove}`).textContent = currentPlayer.symbol;
+            console.log(currentPlayer.name);
+            if (count >= 5) {
+                checkForWin(currentPlayer);
+            }
+        }, 500);
 
     }
 
 
-    function getAIMove() {
+    function getRandomAIMove() {
         let availableSpotsArr = [];
         let randomNum;
 
@@ -253,15 +288,25 @@ const GameBoard = (() => {
         return availableSpotsArr[randomNum];
     }
 
+    function getIntelligentAIMove() {
+
+    }
+
     const activateBoard = (grid) => {
         gameOver = false;
-        grid.addEventListener("click", playerMoveTracker, true);
+        grid.forEach(box => {
+            box.addEventListener("click", playGame, true);;
+        });
+        // grid.addEventListener("click", playGame, true);
         console.log("board activated!");
     }
 
     const deactivateBoard = (grid) => {
         gameOver = true;
-        grid.removeEventListener("click", playerMoveTracker, true);
+        grid.forEach(box => {
+            box.removeEventListener("click", playGame, true);;
+        });
+        // grid.removeEventListener("click", playGame, true);
         console.log("board deactivated");
         count = 0;
 
@@ -275,8 +320,9 @@ const GameBoard = (() => {
                 if (board[i + 1] === currentPlayer.symbol) {
                     if (board[i + 2] === currentPlayer.symbol) {
                         console.log("win row");
-
+                        DisplayControl.highlightWin(i, i + 1, i + 2);
                         DisplayControl.displayWinner(currentPlayer);
+
                         gameOver = true;
                     }
                 }
@@ -289,7 +335,7 @@ const GameBoard = (() => {
                 if (board[i + 3] === currentPlayer.symbol) {
                     if (board[i + 6] === currentPlayer.symbol) {
                         console.log("win col");
-
+                        DisplayControl.highlightWin(i, i + 3, i + 6);
                         DisplayControl.displayWinner(currentPlayer);
                         gameOver = true;
                     }
@@ -302,7 +348,7 @@ const GameBoard = (() => {
             if (board[i] === currentPlayer.symbol) {
                 if (i === (board.length - 1)) {
                     console.log("Win diag left to right");
-
+                    DisplayControl.highlightWin(0, 4, 8);
                     DisplayControl.displayWinner(currentPlayer);
                     gameOver = true;
                 }
@@ -316,7 +362,7 @@ const GameBoard = (() => {
             if (board[i] === currentPlayer.symbol) {
                 if (i === 6) {
                     console.log("Win diag right to left");
-
+                    DisplayControl.highlightWin(2, 4, 6);
                     DisplayControl.displayWinner(currentPlayer);
                     gameOver = true;
                 }
