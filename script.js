@@ -28,7 +28,6 @@ const DisplayControl = (() => {
     });
 
     function toggleGameType() {
-
         //PVP selected
         if (!checkGameTypeIsPVP()) {
             toggleClass(ai, pvp, "selected");
@@ -44,7 +43,6 @@ const DisplayControl = (() => {
             toggleClass(AISection, PVPSection, "collapse");
             activated = true;
             togglePlayBtn(true);
-
         }
         gameTypeSelected = document.querySelector(".selected").textContent;
         console.log("GameType in eventlistener", gameTypeSelected);
@@ -76,7 +74,6 @@ const DisplayControl = (() => {
         if (str.trim() !== "") {
             return true;
         }
-
         return false;
     }
 
@@ -88,7 +85,6 @@ const DisplayControl = (() => {
         input1 = document.getElementById("playerX-name").value;
         input2 = document.getElementById("playerO-name").value;
         console.log(input1, input2);
-
         if (!checkStringIsNotEmpty(input1)) {
             togglePlayBtn(false);
             activated = false;
@@ -133,7 +129,6 @@ const DisplayControl = (() => {
             grid.forEach(box => {
                 box.style.color = defaultColor;
             });
-
             GameBoard.activateBoard(grid);
             GameBoard.getGameType(gameTypeSelected);
             statusDisplay.textContent = playerX.playerTurn;
@@ -158,7 +153,6 @@ const DisplayControl = (() => {
     }
 
     const displayWhosTurn = (counter) => {
-
         if (counter > 0) {
             if (counter % 2 === 0) {
                 statusDisplay.textContent = playerX.playerTurn;
@@ -170,7 +164,6 @@ const DisplayControl = (() => {
         } else if (counter === 0) {
             GameBoard.getCurrentPlayer(playerX);
         }
-
     }
 
     const displayWinner = (winner) => {
@@ -186,7 +179,6 @@ const DisplayControl = (() => {
         document.getElementById(`box-${a}`).style.color = winColor;
         document.getElementById(`box-${b}`).style.color = winColor;
         document.getElementById(`box-${c}`).style.color = winColor;
-
     }
 
     return { displayWhosTurn, displayWinner, highlightWin };
@@ -221,13 +213,10 @@ const GameBoard = (() => {
                 box.removeEventListener("click", playGame, true);
             });
         }
-
         makePlayerMove(e);
-
         if (count >= 5) {
             checkForWin(currentPlayer);
         }
-
         if (gameType === "AI" && !gameOver) {
             makeAIMove();
             setTimeout(function() {
@@ -243,7 +232,6 @@ const GameBoard = (() => {
 
     function makePlayerMove(e) {
         targetIndex = e.target.id.split("-").pop();
-
         e.target.removeEventListener("click", playGame, true);
         console.log(board[targetIndex]);
         if (board[targetIndex] === "") {
@@ -260,9 +248,7 @@ const GameBoard = (() => {
         count++;
         AIMove = getRandomAIMove();
         document.getElementById(`box-${AIMove}`).removeEventListener("click", playGame, true);
-
         setTimeout(function() {
-
             DisplayControl.displayWhosTurn(count);
             board[AIMove] = currentPlayer.symbol;
             document.getElementById(`box-${AIMove}`).textContent = currentPlayer.symbol;
@@ -271,14 +257,11 @@ const GameBoard = (() => {
                 checkForWin(currentPlayer);
             }
         }, 500);
-
     }
-
 
     function getRandomAIMove() {
         let availableSpotsArr = [];
         let randomNum;
-
         for (let i = 0; i < board.length; i++) {
             if (board[i] === "") {
                 availableSpotsArr.push(i);
@@ -288,16 +271,15 @@ const GameBoard = (() => {
         return availableSpotsArr[randomNum];
     }
 
-    function getIntelligentAIMove() {
+    // function getIntelligentAIMove() {
 
-    }
+    // }
 
     const activateBoard = (grid) => {
         gameOver = false;
         grid.forEach(box => {
             box.addEventListener("click", playGame, true);;
         });
-        // grid.addEventListener("click", playGame, true);
         console.log("board activated!");
     }
 
@@ -306,7 +288,6 @@ const GameBoard = (() => {
         grid.forEach(box => {
             box.removeEventListener("click", playGame, true);;
         });
-        // grid.removeEventListener("click", playGame, true);
         console.log("board deactivated");
         count = 0;
 
@@ -328,7 +309,6 @@ const GameBoard = (() => {
                 }
             }
         }
-
         for (let i = 0; i <= 2; i++) {
             console.log(i);
             if (board[i] === currentPlayer.symbol) {
@@ -342,7 +322,6 @@ const GameBoard = (() => {
                 }
             }
         }
-
         for (let i = 0; i < board.length; i += 4) {
             console.log(i);
             if (board[i] === currentPlayer.symbol) {
@@ -356,7 +335,6 @@ const GameBoard = (() => {
                 break;
             }
         }
-
         for (let i = 2; i <= 6; i += 2) {
             console.log(i);
             if (board[i] === currentPlayer.symbol) {
@@ -370,7 +348,6 @@ const GameBoard = (() => {
                 break;
             }
         }
-
         if (count === 9) {
 
             DisplayControl.displayWinner(undefined);
