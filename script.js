@@ -245,7 +245,6 @@ const GameBoard = (() => {
     function makeAIMove() {
 
         if (count >= 3) {
-            console.log("block move", getBlockMove(), "COUNT", count);
             if (getBlockMove() !== undefined) {
                 AIMove = getBlockMove();
             } else {
@@ -279,26 +278,19 @@ const GameBoard = (() => {
     }
 
     function getBlockMove() {
-
-        console.log("current player", currentPlayer);
-        console.log("opponent", opponent);
         //Checks Rows
         for (let i = 0; i < board.length; i += 3) {
             if (board[i] === opponent.symbol || board[i + 1] === opponent.symbol || board[i + 2] === opponent.symbol) {
-                console.log("no block needed ROW");
                 continue;
             }
             if ((board[i] === currentPlayer.symbol && board[i + 1] === currentPlayer.symbol) || (board[i + 1] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol) || (board[i] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol)) {
                 if (board[i] === "") {
-                    console.log("board i", board[i]);
                     return i;
                 }
                 if (board[i + 1] === "") {
-                    console.log("board i+1", board[i + 1]);
                     return (i + 1);
                 }
                 if (board[i + 2] === "") {
-                    console.log("board i+2", board[i + 2]);
                     return (i + 2);
                 }
             }
@@ -306,20 +298,16 @@ const GameBoard = (() => {
         //Checks Cols
         for (let i = 0; i <= 2; i++) {
             if (board[i] === opponent.symbol || board[i + 3] === opponent.symbol || board[i + 6] === opponent.symbol) {
-                console.log("no block needed COL");
                 continue;
             }
             if ((board[i] === currentPlayer.symbol && board[i + 3] === currentPlayer.symbol) || (board[i + 3] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol) || (board[i] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol)) {
                 if (board[i] === "") {
-                    console.log("board i", board[i]);
                     return i;
                 }
                 if (board[i + 3] === "") {
-                    console.log("board i+3", board[i + 3]);
                     return (i + 3);
                 }
                 if (board[i + 6] === "") {
-                    console.log("board i+6", board[i + 6]);
                     return (i + 6);
                 }
             }
@@ -327,7 +315,6 @@ const GameBoard = (() => {
         //Checks Left to Right Diagonal
         for (let i = 0; i < board.length; i += 4) {
             if (board[i] === opponent.symbol) {
-                console.log("no need for block");
                 break;
             }
 
@@ -335,37 +322,29 @@ const GameBoard = (() => {
 
         if ((board[0] === currentPlayer.symbol && board[4] === currentPlayer.symbol) || (board[4] === currentPlayer.symbol && board[8] === currentPlayer.symbol) || (board[0] === currentPlayer.symbol && board[8] === currentPlayer.symbol)) {
             if (board[0] === "") {
-                console.log("board 0", board[0]);
                 return 0;
             }
             if (board[4] === "") {
-                console.log("board 4", board[4]);
                 return 4;
             }
             if (board[8] === "") {
-                console.log("board 8", board[8]);
-
                 return 8;
             }
         }
         //Checks Right to Left Diagonal
         for (let i = 2; i <= 6; i += 2) {
             if (board[i] === opponent.symbol) {
-                console.log("no need for block");
                 break;
             }
         }
         if ((board[2] === currentPlayer.symbol && board[4] === currentPlayer.symbol) || (board[4] === currentPlayer.symbol && board[6] === currentPlayer.symbol) || (board[2] === currentPlayer.symbol && board[6] === currentPlayer.symbol)) {
             if (board[2] === "") {
-                console.log("board 2", board[2]);
                 return 2;
             }
             if (board[4] === "") {
-                console.log("board 4", board[4]);
                 return 4;
             }
             if (board[6] === "") {
-                console.log("board 6", board[6]);
                 return 6;
             }
         }
