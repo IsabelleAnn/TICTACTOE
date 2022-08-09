@@ -45,7 +45,6 @@ const DisplayControl = (() => {
             togglePlayBtn(true);
         }
         gameTypeSelected = document.querySelector(".selected").textContent;
-        console.log("GameType in eventlistener", gameTypeSelected);
     }
 
     function toggleClass(removeClass, addClass, className) {
@@ -84,7 +83,6 @@ const DisplayControl = (() => {
     function validateInput() {
         input1 = document.getElementById("playerX-name").value;
         input2 = document.getElementById("playerO-name").value;
-        console.log(input1, input2);
         if (!checkStringIsNotEmpty(input1)) {
             togglePlayBtn(false);
             activated = false;
@@ -157,12 +155,15 @@ const DisplayControl = (() => {
             if (counter % 2 === 0) {
                 statusDisplay.textContent = playerX.playerTurn;
                 GameBoard.getCurrentPlayer(playerO);
+
             } else {
                 statusDisplay.textContent = playerO.playerTurn;
                 GameBoard.getCurrentPlayer(playerX);
+                GameBoard.getOpponent(playerO);
             }
         } else if (counter === 0) {
             GameBoard.getCurrentPlayer(playerX);
+
         }
     }
 
@@ -203,6 +204,7 @@ const GameBoard = (() => {
     let targetIndex;
     let count = 0;
     let currentPlayer;
+    let opponent;
     let gameType;
     let AIMove;
     let gameOver = false;
@@ -222,7 +224,6 @@ const GameBoard = (() => {
             setTimeout(function() {
                 document.querySelectorAll(".grid-boxes").forEach(box => {
                     if (box.textContent === "") {
-                        console.log("box text", box.textContent, box);
                         box.addEventListener("click", playGame, true);
                     }
                 });
@@ -233,26 +234,32 @@ const GameBoard = (() => {
     function makePlayerMove(e) {
         targetIndex = e.target.id.split("-").pop();
         e.target.removeEventListener("click", playGame, true);
-        console.log(board[targetIndex]);
         if (board[targetIndex] === "") {
             count++;
             DisplayControl.displayWhosTurn(count);
-            console.log(currentPlayer);
             board[targetIndex] = currentPlayer.symbol;
             document.getElementById(`box-${targetIndex}`).textContent = currentPlayer.symbol;
-            console.log(currentPlayer.name);
         }
     }
 
     function makeAIMove() {
+
+        if (count >= 3) {
+            console.log("block move", getBlockMove(), "COUNT", count);
+            if (getBlockMove() !== undefined) {
+                AIMove = getBlockMove();
+            } else {
+                AIMove = getRandomAIMove();
+            }
+        } else {
+            AIMove = getRandomAIMove();
+        }
         count++;
-        AIMove = getRandomAIMove();
         document.getElementById(`box-${AIMove}`).removeEventListener("click", playGame, true);
         setTimeout(function() {
             DisplayControl.displayWhosTurn(count);
             board[AIMove] = currentPlayer.symbol;
             document.getElementById(`box-${AIMove}`).textContent = currentPlayer.symbol;
-            console.log(currentPlayer.name);
             if (count >= 5) {
                 checkForWin(currentPlayer);
             }
@@ -271,16 +278,105 @@ const GameBoard = (() => {
         return availableSpotsArr[randomNum];
     }
 
-    // function getIntelligentAIMove() {
+    function getBlockMove() {
 
-    // }
+        console.log("current player", currentPlayer);
+        console.log("opponent", opponent);
+        //Checks Rows
+        for (let i = 0; i < board.length; i += 3) {
+            if (board[i] === opponent.symbol || board[i + 1] === opponent.symbol || board[i + 2] === opponent.symbol) {
+                console.log("no block needed ROW");
+                continue;
+            }
+            if ((board[i] === currentPlayer.symbol && board[i + 1] === currentPlayer.symbol) || (board[i + 1] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol) || (board[i] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol)) {
+                if (board[i] === "") {
+                    console.log("board i", board[i]);
+                    return i;
+                }
+                if (board[i + 1] === "") {
+                    console.log("board i+1", board[i + 1]);
+                    return (i + 1);
+                }
+                if (board[i + 2] === "") {
+                    console.log("board i+2", board[i + 2]);
+                    return (i + 2);
+                }
+            }
+        }
+        //Checks Cols
+        for (let i = 0; i <= 2; i++) {
+            if (board[i] === opponent.symbol || board[i + 3] === opponent.symbol || board[i + 6] === opponent.symbol) {
+                console.log("no block needed COL");
+                continue;
+            }
+            if ((board[i] === currentPlayer.symbol && board[i + 3] === currentPlayer.symbol) || (board[i + 3] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol) || (board[i] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol)) {
+                if (board[i] === "") {
+                    console.log("board i", board[i]);
+                    return i;
+                }
+                if (board[i + 3] === "") {
+                    console.log("board i+3", board[i + 3]);
+                    return (i + 3);
+                }
+                if (board[i + 6] === "") {
+                    console.log("board i+6", board[i + 6]);
+                    return (i + 6);
+                }
+            }
+        }
+        //Checks Left to Right Diagonal
+        for (let i = 0; i < board.length; i += 4) {
+            if (board[i] === opponent.symbol) {
+                console.log("no need for block");
+                break;
+            }
+
+        }
+
+        if ((board[0] === currentPlayer.symbol && board[4] === currentPlayer.symbol) || (board[4] === currentPlayer.symbol && board[8] === currentPlayer.symbol) || (board[0] === currentPlayer.symbol && board[8] === currentPlayer.symbol)) {
+            if (board[0] === "") {
+                console.log("board 0", board[0]);
+                return 0;
+            }
+            if (board[4] === "") {
+                console.log("board 4", board[4]);
+                return 4;
+            }
+            if (board[8] === "") {
+                console.log("board 8", board[8]);
+
+                return 8;
+            }
+        }
+        //Checks Right to Left Diagonal
+        for (let i = 2; i <= 6; i += 2) {
+            if (board[i] === opponent.symbol) {
+                console.log("no need for block");
+                break;
+            }
+        }
+        if ((board[2] === currentPlayer.symbol && board[4] === currentPlayer.symbol) || (board[4] === currentPlayer.symbol && board[6] === currentPlayer.symbol) || (board[2] === currentPlayer.symbol && board[6] === currentPlayer.symbol)) {
+            if (board[2] === "") {
+                console.log("board 2", board[2]);
+                return 2;
+            }
+            if (board[4] === "") {
+                console.log("board 4", board[4]);
+                return 4;
+            }
+            if (board[6] === "") {
+                console.log("board 6", board[6]);
+                return 6;
+            }
+        }
+    }
+
 
     const activateBoard = (grid) => {
         gameOver = false;
         grid.forEach(box => {
             box.addEventListener("click", playGame, true);;
         });
-        console.log("board activated!");
     }
 
     const deactivateBoard = (grid) => {
@@ -288,7 +384,6 @@ const GameBoard = (() => {
         grid.forEach(box => {
             box.removeEventListener("click", playGame, true);;
         });
-        console.log("board deactivated");
         count = 0;
 
     }
@@ -296,25 +391,20 @@ const GameBoard = (() => {
     function checkForWin(currentPlayer) {
 
         for (let i = 0; i < board.length; i += 3) {
-            console.log(i);
             if (board[i] === currentPlayer.symbol) {
                 if (board[i + 1] === currentPlayer.symbol) {
                     if (board[i + 2] === currentPlayer.symbol) {
-                        console.log("win row");
                         DisplayControl.highlightWin(i, i + 1, i + 2);
                         DisplayControl.displayWinner(currentPlayer);
-
                         gameOver = true;
                     }
                 }
             }
         }
         for (let i = 0; i <= 2; i++) {
-            console.log(i);
             if (board[i] === currentPlayer.symbol) {
                 if (board[i + 3] === currentPlayer.symbol) {
                     if (board[i + 6] === currentPlayer.symbol) {
-                        console.log("win col");
                         DisplayControl.highlightWin(i, i + 3, i + 6);
                         DisplayControl.displayWinner(currentPlayer);
                         gameOver = true;
@@ -323,10 +413,8 @@ const GameBoard = (() => {
             }
         }
         for (let i = 0; i < board.length; i += 4) {
-            console.log(i);
             if (board[i] === currentPlayer.symbol) {
                 if (i === (board.length - 1)) {
-                    console.log("Win diag left to right");
                     DisplayControl.highlightWin(0, 4, 8);
                     DisplayControl.displayWinner(currentPlayer);
                     gameOver = true;
@@ -336,10 +424,8 @@ const GameBoard = (() => {
             }
         }
         for (let i = 2; i <= 6; i += 2) {
-            console.log(i);
             if (board[i] === currentPlayer.symbol) {
                 if (i === 6) {
-                    console.log("Win diag right to left");
                     DisplayControl.highlightWin(2, 4, 6);
                     DisplayControl.displayWinner(currentPlayer);
                     gameOver = true;
@@ -349,7 +435,6 @@ const GameBoard = (() => {
             }
         }
         if (count === 9) {
-
             DisplayControl.displayWinner(undefined);
             gameOver = true;
         }
@@ -357,6 +442,10 @@ const GameBoard = (() => {
 
     const getCurrentPlayer = (player) => {
         currentPlayer = player;
+    }
+
+    const getOpponent = (player) => {
+        opponent = player;
     }
 
     const getGameType = (game) => {
@@ -372,5 +461,5 @@ const GameBoard = (() => {
         });
     }
 
-    return { activateBoard, deactivateBoard, getCurrentPlayer, getGameType, clearBoard };
+    return { activateBoard, deactivateBoard, getCurrentPlayer, getOpponent, getGameType, clearBoard };
 })();
