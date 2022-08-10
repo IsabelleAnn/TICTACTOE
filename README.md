@@ -1,6 +1,8 @@
-# Tic Tac Toe Browser Game  :point_right:[Live Demo](https://isabelleann.github.io/TICTACTOE/)
+# Tic Tac Toe Browser Game
 
-### Implements JS Module and Factory Patterns
+:point_right:[Live Demo](https://isabelleann.github.io/TICTACTOE/)
+
+### Uses JS Module and Factory Patterns
 
 ## Built With:
 JavaScript
