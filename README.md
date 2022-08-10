@@ -5,11 +5,11 @@
 ### Uses JS Module and Factory Patterns
 
 ## Built With:
-JavaScript
+  * JavaScript
 
-HTML
+  * HTML
 
-CSS
+  * CSS
 
 ## Features:
   * Player VS Player game mode with customizable player names
