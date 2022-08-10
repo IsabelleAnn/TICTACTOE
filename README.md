@@ -1,11 +1,11 @@
 # Tic Tac Toe Browser Game
 
+Part of The Odin Project Curriculum
+
 :point_right:[Live Demo](https://isabelleann.github.io/TICTACTOE/)
 
-### Uses JS Module and Factory Patterns
-
 ## Built With:
-  * JavaScript
+  * JavaScript (using Module and Factory Patterns)
 
   * HTML
 
