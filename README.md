@@ -1,4 +1,4 @@
-# Tic Tac Toe Browser Game
+# Tic-Tac-Toe Browser Game
 
 Part of The Odin Project Curriculum
 
