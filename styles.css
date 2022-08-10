@@ -12,6 +12,7 @@
     --player-color-hover: rgb(0, 174, 255);
     --play-color: rgba(195, 0, 255, 0.486);
     --play-color-hover: rgb(195, 0, 255);
+    --text-shadow-color: rgba(255, 255, 0, 0.445);
     --footer-color: rgba(0, 0, 0, 0.26);
     --footer-color-hover: rgb(97, 97, 97);
     /* --footer-color: rgba(238, 255, 0, 0.404);
@@ -54,6 +55,7 @@ body {
 
 #header h1:hover {
     color: var(--header-color-hover);
+    text-shadow: var(--text-shadow-color) 2px 5px;
 }
 
 #status-display {
@@ -90,6 +92,10 @@ body {
     cursor: pointer;
 }
 
+.play-btn-activated:hover {
+    text-shadow: var(--text-shadow-color) 2px 5px;
+}
+
 .arrow {
     font-size: 4vw;
     cursor: pointer;
@@ -99,6 +105,7 @@ body {
 
 .arrow:hover {
     color: var(--header-color-hover);
+    text-shadow: var(--text-shadow-color) 2px 5px;
 }
 
 #playerX-alert,

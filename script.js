@@ -17,7 +17,7 @@ const DisplayControl = (() => {
     let input1 = "";
     let input2 = "";
     let statusDisplay = document.getElementById("status-display");
-    let enterNameMsg = "Enter name";
+    let enterNameMsg = "You must enter a name.";
 
     document.getElementById("playerX-name").value = "";
     document.getElementById("playerO-name").value = "";
