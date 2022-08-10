@@ -1,10 +1,16 @@
-# Tic Tac Toe Browser Game
+# Tic Tac Toe Browser Game  :star:[Live Demo](https://isabelleann.github.io/TICTACTOE/):star:
 
-## Uses JavaScript Module and Factory Patterns
+### Implements JS Module and Factory Patterns
 
 ### Built With:
-    JavaScript
-    HTML
-    CSS
+JavaScript
+HTML
+CSS
 
-[Live Demo](https://isabelleann.github.io/TICTACTOE/)
+### Features:
+Player VS Player game mode with customizable player names
+Intelligent AI game mode
+Displays player's turn
+Announces winner
+
+
