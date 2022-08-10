@@ -2,15 +2,20 @@
 
 ### Implements JS Module and Factory Patterns
 
-### Built With:
+## Built With:
 JavaScript
+
 HTML
+
 CSS
 
-### Features:
+## Features:
 Player VS Player game mode with customizable player names
+
 Intelligent AI game mode
+
 Displays player's turn
+
 Announces winner
 
 
