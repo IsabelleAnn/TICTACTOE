@@ -12,12 +12,12 @@ HTML
 CSS
 
 ## Features:
-⋅⋅*Player VS Player game mode with customizable player names
+⋅⋅* Player VS Player game mode with customizable player names
 
-⋅⋅*Intelligent AI game mode
+⋅⋅* Intelligent AI game mode
 
-⋅⋅*Displays player's turn
+⋅⋅* Displays player's turn
 
-⋅⋅*Announces winner
+⋅⋅* Announces winner
 
 
