@@ -1,4 +1,8 @@
-# TICTACTOE
-Tic Tac Toe game using Modular JavaScript
+# Tic Tac Toe Browser Game
+======
 
-https://isabelleann.github.io/TICTACTOE/
+## Uses JavaScript Module and Factory Patterns
+
+### Built With:
+
+[Live Demo](https://isabelleann.github.io/TICTACTOE/)
