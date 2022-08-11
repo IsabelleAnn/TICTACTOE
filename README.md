@@ -1,5 +1,4 @@
 # Tic-Tac-Toe Browser Game
-<<<<<<< HEAD
 
 Part of The Odin Project Curriculum
 
@@ -57,4 +56,3 @@ Part of The Odin Project Curriculum
   * Displays player's turn
 
   * Announces winner
->>>>>>> 5c5e371 (ReadMe)
