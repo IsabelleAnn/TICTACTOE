@@ -27,9 +27,6 @@ Part of The Odin Project Curriculum
 
   * Announces winner
 
-
-=======
-
 Part of The Odin Project Curriculum
 
 :point_right:[Live Demo](https://isabelleann.github.io/TICTACTOE/)
