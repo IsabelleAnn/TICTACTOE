@@ -22,10 +22,44 @@ const DisplayControl = (() => {
     document.getElementById("playerX-name").value = "";
     document.getElementById("playerO-name").value = "";
 
-    //ARROW EVENT Section: -----------------------------------------------------
+    const displayWhosTurn = (counter) => {
+        if (counter > 0) {
+            if (counter % 2 === 0) {
+                statusDisplay.textContent = playerX.playerTurn;
+                GameBoard.getCurrentPlayer(playerO);
+
+            } else {
+                statusDisplay.textContent = playerO.playerTurn;
+                GameBoard.getCurrentPlayer(playerX);
+                GameBoard.getOpponent(playerO);
+            }
+        } else if (counter === 0) {
+            GameBoard.getCurrentPlayer(playerX);
+        }
+    }
+
+    const displayWinner = (winner) => {
+        if (winner === undefined) {
+            statusDisplay.textContent = "It's a tie!";
+        } else {
+            statusDisplay.textContent = winner.playerWin;
+        }
+        GameBoard.deactivateBoard(grid);
+    }
+
+    const highlightWin = (a, b, c) => {
+        document.getElementById(`box-${a}`).style.color = winColor;
+        document.getElementById(`box-${b}`).style.color = winColor;
+        document.getElementById(`box-${c}`).style.color = winColor;
+    }
+
     arrows.forEach(arrow => {
         arrow.addEventListener("click", toggleGameType);
     });
+    inputNames.forEach(inputBox => {
+        inputBox.addEventListener("keyup", validateInput);
+    });
+    playBtn.addEventListener("click", playBtnHandler);
 
     function toggleGameType() {
         //PVP selected
@@ -76,10 +110,6 @@ const DisplayControl = (() => {
         return false;
     }
 
-    inputNames.forEach(inputBox => {
-        inputBox.addEventListener("keyup", validateInput);
-    });
-
     function validateInput() {
         input1 = document.getElementById("playerX-name").value;
         input2 = document.getElementById("playerO-name").value;
@@ -103,10 +133,6 @@ const DisplayControl = (() => {
         }
     }
 
-    //Play Event Section: ---------------------------------------------------
-    playBtn.addEventListener("click", playBtnHandler);
-
-
     function playBtnHandler() {
         if (activated) {
             if (checkGameTypeIsPVP()) {
@@ -120,7 +146,6 @@ const DisplayControl = (() => {
             toggleNewGame();
         }
     }
-
 
     function toggleNewGame() {
         if (checkBtnIsPlay(playBtn.textContent)) {
@@ -150,42 +175,9 @@ const DisplayControl = (() => {
         }
     }
 
-    const displayWhosTurn = (counter) => {
-        if (counter > 0) {
-            if (counter % 2 === 0) {
-                statusDisplay.textContent = playerX.playerTurn;
-                GameBoard.getCurrentPlayer(playerO);
-
-            } else {
-                statusDisplay.textContent = playerO.playerTurn;
-                GameBoard.getCurrentPlayer(playerX);
-                GameBoard.getOpponent(playerO);
-            }
-        } else if (counter === 0) {
-            GameBoard.getCurrentPlayer(playerX);
-
-        }
-    }
-
-    const displayWinner = (winner) => {
-        if (winner === undefined) {
-            statusDisplay.textContent = "It's a tie!";
-        } else {
-            statusDisplay.textContent = winner.playerWin;
-        }
-        GameBoard.deactivateBoard(grid);
-    }
-
-    const highlightWin = (a, b, c) => {
-        document.getElementById(`box-${a}`).style.color = winColor;
-        document.getElementById(`box-${b}`).style.color = winColor;
-        document.getElementById(`box-${c}`).style.color = winColor;
-    }
-
     return { displayWhosTurn, displayWinner, highlightWin };
 })();
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const Player = (name, symbol) => {
     const playerWin = `${name} won!`;
     let playerTurn;
@@ -197,8 +189,6 @@ const Player = (name, symbol) => {
     return { name, symbol, playerWin, playerTurn };
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 const GameBoard = (() => {
     let board = ["", "", "", "", "", "", "", "", ""];
     let targetIndex;
@@ -208,6 +198,42 @@ const GameBoard = (() => {
     let gameType;
     let AIMove;
     let gameOver = false;
+
+    const activateBoard = (grid) => {
+        gameOver = false;
+        grid.forEach(box => {
+            box.addEventListener("click", playGame, true);;
+        });
+    }
+
+    const deactivateBoard = (grid) => {
+        gameOver = true;
+        grid.forEach(box => {
+            box.removeEventListener("click", playGame, true);;
+        });
+        count = 0;
+    }
+
+    const getCurrentPlayer = (player) => {
+        currentPlayer = player;
+    }
+
+    const getOpponent = (player) => {
+        opponent = player;
+    }
+
+    const getGameType = (game) => {
+        gameType = game;
+    }
+
+    const clearBoard = () => {
+        board.forEach((box, index) => {
+            board[index] = "";
+            box = "";
+            document.getElementById(`box-${index}`).textContent = box;
+            gameOver = false;
+        });
+    }
 
     function playGame(e) {
         if (gameType === "AI") {
@@ -243,7 +269,6 @@ const GameBoard = (() => {
     }
 
     function makeAIMove() {
-
         if (count >= 3) {
             if (getBlockMove() !== undefined) {
                 AIMove = getBlockMove();
@@ -283,7 +308,9 @@ const GameBoard = (() => {
             if (board[i] === opponent.symbol || board[i + 1] === opponent.symbol || board[i + 2] === opponent.symbol) {
                 continue;
             }
-            if ((board[i] === currentPlayer.symbol && board[i + 1] === currentPlayer.symbol) || (board[i + 1] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol) || (board[i] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol)) {
+            if ((board[i] === currentPlayer.symbol && board[i + 1] === currentPlayer.symbol) ||
+                (board[i + 1] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol) ||
+                (board[i] === currentPlayer.symbol && board[i + 2] === currentPlayer.symbol)) {
                 if (board[i] === "") {
                     return i;
                 }
@@ -300,7 +327,9 @@ const GameBoard = (() => {
             if (board[i] === opponent.symbol || board[i + 3] === opponent.symbol || board[i + 6] === opponent.symbol) {
                 continue;
             }
-            if ((board[i] === currentPlayer.symbol && board[i + 3] === currentPlayer.symbol) || (board[i + 3] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol) || (board[i] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol)) {
+            if ((board[i] === currentPlayer.symbol && board[i + 3] === currentPlayer.symbol) ||
+                (board[i + 3] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol) ||
+                (board[i] === currentPlayer.symbol && board[i + 6] === currentPlayer.symbol)) {
                 if (board[i] === "") {
                     return i;
                 }
@@ -319,8 +348,9 @@ const GameBoard = (() => {
             }
 
         }
-
-        if ((board[0] === currentPlayer.symbol && board[4] === currentPlayer.symbol) || (board[4] === currentPlayer.symbol && board[8] === currentPlayer.symbol) || (board[0] === currentPlayer.symbol && board[8] === currentPlayer.symbol)) {
+        if ((board[0] === currentPlayer.symbol && board[4] === currentPlayer.symbol) ||
+            (board[4] === currentPlayer.symbol && board[8] === currentPlayer.symbol) ||
+            (board[0] === currentPlayer.symbol && board[8] === currentPlayer.symbol)) {
             if (board[0] === "") {
                 return 0;
             }
@@ -337,7 +367,9 @@ const GameBoard = (() => {
                 break;
             }
         }
-        if ((board[2] === currentPlayer.symbol && board[4] === currentPlayer.symbol) || (board[4] === currentPlayer.symbol && board[6] === currentPlayer.symbol) || (board[2] === currentPlayer.symbol && board[6] === currentPlayer.symbol)) {
+        if ((board[2] === currentPlayer.symbol && board[4] === currentPlayer.symbol) ||
+            (board[4] === currentPlayer.symbol && board[6] === currentPlayer.symbol) ||
+            (board[2] === currentPlayer.symbol && board[6] === currentPlayer.symbol)) {
             if (board[2] === "") {
                 return 2;
             }
@@ -350,25 +382,7 @@ const GameBoard = (() => {
         }
     }
 
-
-    const activateBoard = (grid) => {
-        gameOver = false;
-        grid.forEach(box => {
-            box.addEventListener("click", playGame, true);;
-        });
-    }
-
-    const deactivateBoard = (grid) => {
-        gameOver = true;
-        grid.forEach(box => {
-            box.removeEventListener("click", playGame, true);;
-        });
-        count = 0;
-
-    }
-
     function checkForWin(currentPlayer) {
-
         for (let i = 0; i < board.length; i += 3) {
             if (board[i] === currentPlayer.symbol) {
                 if (board[i + 1] === currentPlayer.symbol) {
@@ -417,27 +431,6 @@ const GameBoard = (() => {
             DisplayControl.displayWinner(undefined);
             gameOver = true;
         }
-    }
-
-    const getCurrentPlayer = (player) => {
-        currentPlayer = player;
-    }
-
-    const getOpponent = (player) => {
-        opponent = player;
-    }
-
-    const getGameType = (game) => {
-        gameType = game;
-    }
-
-    const clearBoard = () => {
-        board.forEach((box, index) => {
-            board[index] = "";
-            box = "";
-            document.getElementById(`box-${index}`).textContent = box;
-            gameOver = false;
-        });
     }
 
     return { activateBoard, deactivateBoard, getCurrentPlayer, getOpponent, getGameType, clearBoard };
