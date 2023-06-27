@@ -1,28 +1,29 @@
 # Tic-Tac-Toe Browser Game
 
-Part of The Odin Project Curriculum
-
 :point_right:[Live Demo](https://isabelleann.github.io/TICTACTOE/)
 
 ## Built With:
-  * JavaScript (using Module and Factory Patterns)
 
-  * HTML
+- JavaScript (using Module and Factory Patterns)
 
-  * CSS
-  
+- HTML
+
+- CSS
+
 ## Tools:
-  * Visual Studio Code
-  
-  * Ubuntu Linux on VirtualBox
-  
-  * git + Github
+
+- Visual Studio Code
+
+- Ubuntu Linux on VirtualBox
+
+- git + Github
 
 ## Features:
-  * Player VS Player game mode with customizable player names
 
-  * Intelligent AI game mode
+- Player VS Player game mode with customizable player names
 
-  * Displays player's turn
+- Intelligent AI game mode
 
-  * Announces winner
+- Displays player's turn
+
+- Announces winner
